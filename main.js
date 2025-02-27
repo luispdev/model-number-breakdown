@@ -29,22 +29,20 @@ function submitInput() {
     
     // selecting each character
     systemType(modelNumberSplit[0], modelNumberSplit[9], modelNumberSplit[10]);
-    efficiency(modelNumberSplit[1]);
+    efficiency(modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2],);
     refrigerant(modelNumberSplit[2]);
-    tonnage(modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5]);
+    tonnage(modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5]);
     voltage(modelNumberSplit[7]);
     OutsideAir(modelNumberSplit[13], modelNumberSplit[9], modelNumberSplit[10])
-    indoorFanType(modelNumberSplit[14], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5], modelNumberSplit[7], modelNumberSplit[9], modelNumberSplit[11], modelNumberSplit[12], modelNumberSplit[21], modelNumberSplit[38]);
+    indoorFanType(modelNumberSplit[14], modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5], modelNumberSplit[7], modelNumberSplit[9], modelNumberSplit[11], modelNumberSplit[12], modelNumberSplit[21], modelNumberSplit[38]);
     spaceController(modelNumberSplit[20], modelNumberSplit[14]);
     hotGasReheatDehum(modelNumberSplit[21]);
     supplyAndReturnSmokeDetector(modelNumberSplit[23]);
     systemMonitorControls(modelNumberSplit[24]);
     lowAmbient(modelNumberSplit[28]);
     DATSensor(modelNumberSplit[9], modelNumberSplit[13], modelNumberSplit[14], modelNumberSplit[21], modelNumberSplit[24]);
-    notInstalledNote(modelNumberSplit[10], modelNumberSplit[13]);
-    gasHeat(modelNumberSplit[9], modelNumberSplit[0], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5], modelNumberSplit[10]);
-    electricHeat(modelNumberSplit[0], modelNumberSplit[2], modelNumberSplit[9], modelNumberSplit[10])
-    heatPumpAndDualFuel(modelNumberSplit[0], modelNumberSplit[2], modelNumberSplit[9], modelNumberSplit[10])
+    notInstalledNote(modelNumberSplit[0]);
+    heatSelection(modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5],modelNumberSplit[9], modelNumberSplit[10]);
     
     // Clearing the message and displaying the configurations
     lengthMessage.style.display = 'none';
@@ -78,7 +76,23 @@ document.getElementById("co2-sensor").innerHTML = "Not Installed";
 document.getElementById("dcv").innerHTML = "Disabled";
 document.getElementById("ventilation").innerHTML = "Not Installed";
 
-// System Type
+// Verify
+function verifyFirstThreeDigits() {
+  primaryHeatingCapacity.style.display = "none";
+  primaryHeatingType.style.display = "none";
+  primaryHeatingStages.style.display = "none";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "none";
+  document.getElementById("refrig-system").innerHTML = "Verify Digit One";
+  document.getElementById("efficiency").innerHTML = "Verify Digit Two";
+  document.getElementById("refrig-type").innerHTML = "Verify Digit Three";
+  document.getElementById("heating-source").innerHTML = "Verify your model number!";
+}
+
+// **********  System Type Selection **********
 function systemType(digitOne) {
   switch (digitOne) {
     case "Y":
@@ -100,8 +114,8 @@ function systemType(digitOne) {
   }
 }
 
-// Efficiency
-function efficiency(digitTwo) {
+// **********  Efficiency Selection **********
+function efficiency(digitOne, digitTwo, digitThree) {
   switch (digitTwo) {
     case "S":
       document.getElementById("efficiency").innerHTML = "Standard Efficiency";
@@ -112,16 +126,25 @@ function efficiency(digitTwo) {
       break;
 
     case "Z":
-      document.getElementById("efficiency").innerHTML = "Ultra High Efficiency";
+      switch (digitOne + digitTwo + digitThree) {
+        case "TZK":
+        case "YZK":
+          document.getElementById("efficiency").innerHTML = "Ultra High Efficiency";
+          break;
+      
+        default:
+          verifyFirstThreeDigits();
+          break;
+      }
       break;
-
+      
     default:
       document.getElementById("efficiency").innerHTML = "Verify Digit Two";
       break;
   }
 }
 
-// Refrigerant
+// **********  Refrigerant Selection **********
 function refrigerant(digitThree) {
   switch (digitThree) {
     case "J":
@@ -131,26 +154,56 @@ function refrigerant(digitThree) {
     case "K":
       document.getElementById("refrig-type").innerHTML = "R454B";
       break;
+
+    default:
+      document.getElementById("refrig-type").innerHTML = "Verify Digit Three";
+      break;
   }
 }
 
-// Tonnage
-function tonnage(digitFour, digitFive, digitSix) {
+// **********  Tonnage Selection **********
+// Verifying Tonnage
+function verifyTonnage() {
+  primaryHeatingCapacity.style.display = "none";
+  primaryHeatingType.style.display = "none";
+  primaryHeatingStages.style.display = "none";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "none";
+  document.getElementById("tonnage").innerHTML = "Verify Digit Three, Four, and Five";
+  document.getElementById("heating-source").innerHTML = "Verify your model number!";
+}
+
+function tonnage(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix) {
   switch (digitFour + digitFive + digitSix) {
     case "036":
-      document.getElementById("tonnage").innerHTML = "3 Ton";
+      if (digitThree === "K") {
+        document.getElementById("tonnage").innerHTML = "3 Ton";
+      } else {
+        document.getElementById("tonnage").innerHTML = "Verify Digits Four, Five, and Six";
+      }
       break;
 
     case "048":
-      document.getElementById("tonnage").innerHTML = "4 Ton";
+      if (digitThree === "K") {
+        document.getElementById("tonnage").innerHTML = "4 Ton";
+      } else {
+        document.getElementById("tonnage").innerHTML = "Verify Digits Four, Five, and Six";
+      }
       break;
 
     case "060":
-      document.getElementById("tonnage").innerHTML = "5 Ton";
+      if (digitThree === "K") {
+        document.getElementById("tonnage").innerHTML = "5 Ton";
+      } else {
+        document.getElementById("tonnage").innerHTML = "Verify Digits Four, Five, and Six";
+      }
       break;
 
     case "072":
-      document.getElementById("tonnage").innerHTML = "6 Ton";
+        document.getElementById("tonnage").innerHTML = "6 Ton";
       break;
 
     case "090":
@@ -184,10 +237,14 @@ function tonnage(digitFour, digitFive, digitSix) {
     case "300":
       document.getElementById("tonnage").innerHTML = "25 Ton";
       break;
+      
+    default:
+      document.getElementById("tonnage").innerHTML = "Verify Digits Four, Five, and Six";
+      break;
   }
 }
 
-// Voltage Selection
+// **********  Voltage Selection  **********
 function voltage(digitEight) {
   switch (digitEight) {
     case "3":
@@ -201,10 +258,15 @@ function voltage(digitEight) {
     case "W":
       document.getElementById("voltage").innerHTML = "575/60/3";
       break;
+
+    default:
+      document.getElementById("voltage").innerHTML = "Verify Digits Eight";
+      break;
   }
 }
 
-// Primary Heat and Secondary Heating  
+// **********  Heating and Cooling Section  **********
+// Primary Heat and Secondary Heating Selection Elements
 let primaryHeatingCapacity = document.getElementById("primary-heating-capacity");
 let secondaryHeatingCapacity = document.getElementById("secondary-heating-capacity");
 let primaryHeatingType = document.getElementById("primary-type");
@@ -214,315 +276,1201 @@ let secondaryHeatingType = document.getElementById("secondary-type");
 let secondaryHeatingStages = document.getElementById("secondary-stages");
 let heatPumpType = document.getElementById("heatpump-type");
 
-// Modulating Gas Heat 
-function modGas(digitFour, digitFive, digitSix, digitTen, digitEleven) {
-  switch (digitFour + digitFive + digitSix) {
-    case "072":
-      if (digitTen === "B" && digitEleven === "L") {
-        document.getElementById("heating-capacity").innerHTML = "80 MBH Low Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "80 MBH Low Heat";
-      } else if (digitTen === "B" && digitEleven === "H") {
-        document.getElementById("heating-capacity").innerHTML = "150 MBH High Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "150 MBH High Heat";
+// Heat Pump Configuration
+function heatPumpConfig() {
+  primaryHeatingCapacity.style.display = "none";
+  primaryHeatingType.style.display = "";
+  primaryHeatingStages.style.display = "";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "";
+  document.getElementById("heating-source").innerHTML = "Heat Pump";
+  document.getElementById("heating-type").innerHTML = "Staged";
+  document.getElementById("heating-stages").innerHTML = "Full";
+  document.getElementById("hp-type").innerHTML = "Air Source";
+  document.getElementById("s-heating-source").innerHTML = "* Not Installed";
+}
+
+// Verifying Heat Pump Primary Heating Selection
+function verfiyHPPrimaryHeatingSelection() {
+  primaryHeatingCapacity.style.display = "none";
+  primaryHeatingType.style.display = "";
+  primaryHeatingStages.style.display = "";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "";
+  document.getElementById("hp-type").innerHTML = "Verify your model number!";
+  document.getElementById("heating-source").innerHTML = "Verify Digit Ten and Eleven";
+  document.getElementById("heating-type").innerHTML = "Verify your model number!";
+  document.getElementById("heating-stages").innerHTML = "Verify your model number!";
+}
+
+// Verifying Secondary Heating Selection
+function verfiySecondaryHeatingSelection() {
+  heatPumpConfig();
+  document.getElementById("s-heating-source").innerHTML = "Verify Digit Eleven";
+}
+
+// Secondary First Stage Electric Heat Configuration
+function secondaryFirstStageElectricHeat() {
+  secondaryHeatingType.style.display = "";
+  secondaryHeatingStages.style.display = "";
+  document.getElementById("s-heating-source").innerHTML = "Electric";
+  document.getElementById("s-heating-type").innerHTML = "Staged";
+  document.getElementById("s-heating-stages").innerHTML = "1";
+}
+
+// Secondary Second Stage Electric Heat Configuration
+function secondarySecondStageElectricHeat() {
+  secondaryHeatingType.style.display = "";
+  secondaryHeatingStages.style.display = "";
+  document.getElementById("s-heating-source").innerHTML = "Electric";
+  document.getElementById("s-heating-type").innerHTML = "Staged";
+  document.getElementById("s-heating-stages").innerHTML = "2";
+}
+
+// Stage Gas Heat Configuration Selection
+function stagedGasHeatSelection() {
+  primaryHeatingCapacity.style.display = "none";
+  primaryHeatingType.style.display = "";
+  primaryHeatingStages.style.display = "";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "none";
+  document.getElementById("heating-source").innerHTML = "Gas";
+  document.getElementById("heating-type").innerHTML = "Staged";
+  document.getElementById("heating-stages").innerHTML = "2";
+}
+
+// Primary Modulating Has Heat Configuration Selection
+function modulatingGasHeatSelection() {
+  primaryHeatingCapacity.style.display = "";
+  primaryHeatingType.style.display = "";
+  primaryHeatingStages.style.display = "none";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "none";
+  document.getElementById("heating-source").innerHTML = "Gas";
+  document.getElementById("heating-type").innerHTML = "Modulating";
+}
+
+// Secondary Stage Gas Heat Configuration
+function secondaryStagedGasHeatSelection() {
+  secondaryHeatingSource.style.display = "";
+  secondaryHeatingType.style.display = "";
+  secondaryHeatingStages.style.display = "";
+  document.getElementById("s-heating-source").innerHTML = "Gas";
+  document.getElementById("s-heating-type").innerHTML = "Staged";
+  document.getElementById("s-heating-stages").innerHTML = "2";
+}
+
+// Verify Stage Gas Heat Configuration Selection Digit Ten
+function verfiyHeatingDigitTen() {
+  stagedGasHeatSelection();
+  primaryHeatingType.style.display = "none";
+  primaryHeatingStages.style.display = "None";
+  primaryHeatingCapacity.style.display = "none";
+  document.getElementById("heating-source").innerHTML = "Verify Digit Ten";
+}
+
+// Verify Stage Gas Heat Configuration Selection Digit Eleven
+function verfiyStageGasDigitEleven() {
+  stagedGasHeatSelection();
+  primaryHeatingType.style.display = "none";
+  primaryHeatingStages.style.display = "None";
+  primaryHeatingCapacity.style.display = "none";
+  document.getElementById("heating-source").innerHTML = "Verify Digit Eleven";
+}
+
+// Verifying Secondary Staged Gas Heating Source 
+function verifySecondaryHeatDigitTen() {
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  document.getElementById("s-heating-source").innerHTML = "Verify Digit Ten";
+}
+
+// Verifying Secondary Modulating Gas Heat Source
+function verifySecondaryModGasDigitEleven() {
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  document.getElementById("s-heating-source").innerHTML = "Verify Digit Eleven";
+}
+
+// Secondary Modulating Gas Heat Configuration Selection
+function modulatingGasHeatSecondarySelection() {
+  secondaryHeatingCapacity.style.display = "";
+  secondaryHeatingType.style.display = "";
+  document.getElementById("s-heating-source").innerHTML = "Gas";
+  document.getElementById("s-heating-type").innerHTML = "Modulating";
+}
+
+// Cooling Only Configuration Selection for (TSJ - THJ)
+function coolingOnlyConfig() {
+  primaryHeatingCapacity.style.display = "none";
+  primaryHeatingType.style.display = "none";
+  primaryHeatingStages.style.display = "none";
+  secondaryHeatingCapacity.style.display = "none";
+  secondaryHeatingSource.style.display = "none";
+  secondaryHeatingType.style.display = "none";
+  secondaryHeatingStages.style.display = "none";
+  heatPumpType.style.display = "none";
+  document.getElementById("heating-source").innerHTML = "* Not Installed";
+}
+
+// Primary Electric Heating Selection for (TSJ - THJ)
+function oneStageElectricHeatPrimary() {
+  coolingOnlyConfig();
+  primaryHeatingType.style.display = "";
+  primaryHeatingStages.style.display = "";
+  document.getElementById("heating-source").innerHTML = "Electric";
+  document.getElementById("heating-type").innerHTML = "Staged";
+  document.getElementById("heating-stages").innerHTML = "1";
+}
+
+// Two stage Electric Heating Selection for (TSJ - THJ)
+function twoStageElecticHeatSecondary() {
+  coolingOnlyConfig();
+  primaryHeatingType.style.display = "";
+  primaryHeatingStages.style.display = "";
+  document.getElementById("heating-source").innerHTML = "Electric";
+  document.getElementById("heating-type").innerHTML = "Staged";
+  document.getElementById("heating-stages").innerHTML = "2";
+}
+
+// Primary Electric Heat Verification
+function verifyElectricHeatDigitEleven() {
+  coolingOnlyConfig();
+  document.getElementById("heating-source").innerHTML = "Verify Digit Eleven";
+}
+
+// Heat Pump Selection for (WSJ - WHJ - WSK - WHK - DSJ - DHJ - DSK - DHK)
+function heatPumpAndDualFuelSelection(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven) {
+  // WSJ150A4S0000C1A0000000C40000000000000B0
+  switch (digitOne + digitTwo + digitThree) {
+    // Heat Pump WSJ and WHJ 12.5-25 Ton and Secondary Electric Heat
+    case "WSJ":
+    case "WHJ":
+      console.log("Me")
+      switch (digitFour + digitFive + digitSix) {
+        case "150":
+        case "180":
+        case "240":
+        case "300":
+          console.log("Me")
+          heatPumpConfig();
+          switch (digitTen) {
+            case "0":
+              if (digitEleven !== "0") {
+                electricHeatSelectionWSJAndWHJ(digitFour, digitFive, digitSix, digitEleven);
+              }
+              break;
+          
+            default:
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+    break;
+
+    // Dual Fuel DSJ and DHJ 12.5-25 Ton
+    // DSJ150A4S0L00C1A0000000C40000000000000B0
+    case "DSJ":
+    case "DHJ":
+      switch (digitFour + digitFive + digitSix) {
+        case "150":
+        case "180":
+        case "240":
+        case "300":
+          heatPumpConfig();
+          switch (digitTen) {
+            case "0":
+            case "A":
+              secondaryStagedGasHeat(digitEleven);
+              break;
+
+            case "B":
+              modulatingGasHeatSecondarySelection();
+              modulatingGasHeat(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitEleven);
+              break;
+          
+            default:
+              modGasVerification()
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+    break;
+
+    // Heat Pump WSK and WHK 3-25 Ton and Secondary Electric Heat
+    // WSk150A4S0P00C1A0000000C40000000000000B0
+    case "WSK":
+    case "WHK":
+      switch (digitFour + digitFive + digitSix) {
+        case "036":
+        case "048":
+        case "060":
+        case "072":
+        case "090":
+        case "102":
+        case "120":
+        case "150":
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+          heatPumpConfig();
+          switch (digitTen) {
+            case "0":
+              if (digitEleven !== "0") {
+                electricHeatSelectionWSKAndWHK(digitFour, digitFive, digitSix, digitEleven);
+              }
+              break;
+          
+            default:
+              verfiySecondaryHeatingSelection();
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+      break;
+   
+    // Dual Fuel DSK and DHK 3-25 Ton
+    // DSK150A4S0L00C1A0000000C40000000000000B0
+    case "DSK":
+    case "DHK":
+      switch (digitFour + digitFive + digitSix) {
+        case "036":
+        case "048":
+        case "060":
+        case "072":
+        case "090":
+        case "102":
+        case "120":
+        case "150":
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+          heatPumpConfig();
+          switch (digitTen) {
+            case "0":
+            case "A":
+              secondaryStagedGasHeat(digitEleven);
+              break;
+              
+            case "B":
+              modulatingGasHeatSecondarySelection();
+              modulatingGasHeat(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitEleven);
+              break;
+          
+            default:
+              verifySecondaryHeatDigitTen();
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
       }
       break;
 
+    default:
+      break;
+  }  
+}
+
+function secondaryStagedGasHeat(digitEleven) {
+  switch (digitEleven) {
+    case "L":
+    case "M":
+    case "H":  
+    secondaryStagedGasHeatSelection();
+      break;
+  
+    default:
+      verifySecondaryModGasDigitEleven();
+      break;
+  }
+}
+
+// Primary Modulating Gas Heat for 6-25 Ton (YSJ - YHJ - YSK - YHK - YZK)
+function modulatingGasHeat(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitEleven) {  
+  // YSJ150A4SBH00C1A0000000C40000000000000B0
+  // YSK150A4SBH00C1A0000000C40000000000000B0
+  // YZK300A4SBL00C1A0000000C40000000000000B0
+  switch (digitOne + digitTwo + digitThree) {
+    case "YSJ":
+    case "YHJ":
+    case "YSK":
+    case "YHK":
+    case "YZK":
+      // 6 Ton
+      switch (digitFour + digitFive + digitSix) {
+        case "072":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("heating-capacity").innerHTML = "80 MBH Low Heat";
+              break;
+
+            case "H":
+              document.getElementById("heating-capacity").innerHTML = "150 MBH High Heat";
+              break;
+          
+            default:
+              verfiyStageGasDigitEleven();
+              break;
+          }
+          break;
+          
+        // 7.5 Ton
+        // 8.5
+        case "090":
+        case "102":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("heating-capacity").innerHTML = "120 MBH Low Heat";
+              break;
+
+            case "H":
+              document.getElementById("heating-capacity").innerHTML = "200 MBH High Heat";
+              break;
+          
+            default:
+            verfiyStageGasDigitEleven();
+          }
+          break;
+
+        // 10 Ton
+        case "120":
+          switch (digitEleven) {
+            case "L":
+            if ( digitOne === "Y" && digitTwo === "Z" && digitThree === "K") {
+              document.getElementById("heating-capacity").innerHTML = "150 MBH Low Heat";
+            } else {
+              verfiyStageGasDigitEleven();
+            }
+            break;
+
+            case "H":
+              document.getElementById("heating-capacity").innerHTML = "240 MBH High Heat";
+              break;
+          
+            default:
+              verfiyStageGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 12.5 Ton
+        case "150":
+          switch (digitEleven) {
+            case "L":
+              if (digitOne === "Y" && digitTwo === "H" && digitThree === "K") {
+                verfiyStageGasDigitEleven();
+              } else if (digitOne === "Y" && digitTwo === "Z" && digitThree === "K") {
+                verfiyStageGasDigitEleven();
+              } else {
+                document.getElementById("heating-capacity").innerHTML = "150 MBH Low Heat";
+              }
+              break;
+
+            case "H":
+              document.getElementById("heating-capacity").innerHTML = "250 MBH High Heat";
+              break;
+          
+            default:
+              verfiyStageGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 15 Ton
+        // 17.5 Ton
+        // 20 Ton 
+        // 25 Ton  
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("heating-capacity").innerHTML = "250 MBH Low Heat";
+              break;
+
+            case "H":
+              document.getElementById("heating-capacity").innerHTML = "400 MBH High Heat";
+              break;
+          
+            default:
+              verfiyStageGasDigitEleven();
+              break;
+          }
+          break;
+
+        default:
+          verifyTonnage();
+          break;
+      }
+      break;
+
+    // Secondary Modulating Gas Heat for 12.5-25 Ton (DSJ - DHJ)   
+    // DSJ150A4SBH00C1A0000000C40000000000000B0
+    case "DSJ":
+    case "DHJ":
+      switch (digitFour + digitFive + digitSix) {
+        // 12.5 Ton
+        case "150":
+          switch (digitEleven) {
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "250 MBH High Heat";
+              break;
+          
+            default:
+              verfiyStageGasDigitEleven();
+              break;
+          }
+          break;
+
+          // 15 Ton
+          // 20 Ton
+          // 25 Ton
+          case "180":
+          case "240":
+          case "300":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("s-heating-capacity").innerHTML = "250 MBH Low Heat";
+              break;  
+
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "400 MBH High Heat";
+              break;
+          
+            default:
+              verfiyStageGasDigitEleven();
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+      break;
+
+    // Secondary Modulating Gas Heat for 3-25 Ton (DSK - DHK)   
+    // DSK150A4SBH00C1A0000000C40000000000000B0
+    case "DSK":
+    case "DHK":
+      switch (digitFour + digitFive + digitSix) {
+        // 6 Ton
+        case "072":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("s-heating-capacity").innerHTML = "80 MBH Low Heat";
+              break;
+          
+            default:
+              verifySecondaryModGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 7.5 Ton
+        case "090":
+          switch (digitEleven) {
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "200 MBH High Heat";
+              break;
+          
+            default:
+              verifySecondaryModGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 8.5 Ton
+        case "102":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("s-heating-capacity").innerHTML = "120 MBH Low Heat";
+              break;
+
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "200 MBH High Heat";
+              break;
+          
+            default:
+              verifySecondaryModGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 10 Ton
+        case "120":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("s-heating-capacity").innerHTML = "150 MBH Low Heat";
+              break;
+
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "250 MBH High Heat";
+              break;
+          
+            default:
+              verifySecondaryModGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 12.5 Ton
+        case "150":
+          switch (digitEleven) {
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "250 MBH High Heat";
+              break;
+          
+            default:
+              verifySecondaryModGasDigitEleven();
+              break;
+          }
+          break;
+
+        // 15 Ton
+        // 17.5 Ton
+        // 20 Ton
+        case "180":
+        case "210":
+        case "240":
+          switch (digitEleven) {
+            case "L":
+              document.getElementById("s-heating-capacity").innerHTML = "250 MBH Low Heat";
+              break;
+
+            case "H":
+              document.getElementById("s-heating-capacity").innerHTML = "400 MBH High Heat";
+              break;
+          
+            default:
+              verifySecondaryModGasDigitEleven();
+              break;
+          }
+          break;
+
+          // 25 Ton
+          case "300":
+            switch (digitEleven) {
+              case "L":
+                document.getElementById("s-heating-capacity").innerHTML = "250 MBH Low Heat";
+                break;
+            
+              default:
+                verifySecondaryModGasDigitEleven();
+                break;
+            }
+            break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }        
+      break;
+  
+    default:
+      break;
+  }
+}
+
+// Stage Gas Heat (YSJ - YHJ - YSK - YHK - YZK)
+// YSJ240A4S0000C1A0000000C40000000000000B0 
+// YHK240A4SAH00C1A0000000C40000000000000B0
+// YZK240A4S0L00C1A0000000C40000000000000B0
+function stagedOrModGasHeatSelection(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven) {
+
+  switch (digitOne + digitTwo + digitThree) {
+    // Primary Staged Gas Heat for 6-25 Ton (YSJ - YHJ)
+    case "YSJ":
+    case "YHJ":
+      switch (digitFour + digitFive + digitSix) {
+        case "072":
+        case "090":
+        case "102":
+        case "120":
+        case "150":
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+          switch (digitTen) {
+            case "0":
+            case "A":
+              stagedGasHeat(digitEleven);
+              break;
+
+            case "B":
+              modulatingGasHeatSelection();
+              modulatingGasHeat(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitEleven);
+              break
+          
+            default:
+              verfiyHeatingDigitTen();
+              break;
+          }
+            break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+      break;
+
+    // Primary Staged Gas Heat for 3-25 Ton (YSK - YHK - YZK) 
+    case "YSK":
+    case "YHK":
+    case "YZK":
+      switch (digitFour + digitFive + digitSix) {
+        case "036":
+        case "048":
+        case "060":
+        case "072":
+        case "090":
+        case "102":
+        case "120":
+        case "150":
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+            // Staged Gas Heat
+        switch (digitTen) {
+          case "0":
+          case "A":
+            stagedGasHeat(digitEleven);
+            break;
+
+          case "B":
+            modulatingGasHeatSelection();
+            modulatingGasHeat(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitEleven);
+            break;
+
+            default:
+              verfiyHeatingDigitTen();
+              break;
+        }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+      break;
+
+      default:
+        break;
+  }
+}
+
+function stagedGasHeat(digitEleven) {
+  switch (digitEleven) {
+    case "L":
+    case "M":
+    case "H":  
+      stagedGasHeatSelection();
+      break;
+  
+    default:
+      verfiyStageGasDigitEleven();
+      break;
+  }
+}
+
+// Secondary Electric Heat for 12.5-25 Ton (WSJ - WHJ)
+// WSJ150A4S0P00C1A0000000C40000000000000B0
+// WHJ240A4S0N00C1A0000000C40000000000000B0
+function electricHeatSelectionWSJAndWHJ(digitFour, digitFive, digitSix, digitEleven) {
+
+  switch (digitFour + digitFive + digitSix) {
+    case "150":
+    case "180":
+      switch (digitEleven) {
+        case "G":
+          secondaryFirstStageElectricHeat();
+          break;
+    
+        case "K":
+        case "N":
+        case "P":
+          secondarySecondStageElectricHeat();
+          break;
+      
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
+      break;
+  
+    case "240":
+    case "300":
+      switch (digitEleven) {
+        case "K":
+        case "N":
+        case "P":
+        case "R":
+          secondarySecondStageElectricHeat();
+          break;
+      
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  
+}
+
+// Secondary Electric Heat for 3-25 Ton (WSK and WHK)
+// WSK072A4S0C00C1A0000000C40000000000000B0
+function electricHeatSelectionWSKAndWHK(digitFour, digitFive, digitSix, digitEleven) {
+
+  switch (digitFour + digitFive + digitSix) {
+    case "036":
+    case "048":
+      switch (digitEleven) {
+        case "B":
+          secondaryFirstStageElectricHeat();
+          break;
+      
+        case "E":
+        case "G":
+          secondarySecondStageElectricHeat();
+          break;
+
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
+      break;
+  
+    case "060":
+      switch (digitEleven) {
+        case "B":
+          secondaryFirstStageElectricHeat();
+          break;
+      
+        case "E":
+        case "G":
+        case "J":
+        case "K":
+          secondarySecondStageElectricHeat();
+          break;
+
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
+      break;
+
+    case "072":
     case "090":
     case "102":
-      if (digitTen === "B" && digitEleven === "L") {
-        document.getElementById("heating-capacity").innerHTML = "120 MBH Low Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "120 MBH Low Heat";
-      } else if (digitTen === "B" && digitEleven === "H") {
-        document.getElementById("heating-capacity").innerHTML = "200 MBH High Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "200 MBH High Heat";
+      switch (digitEleven) {
+        case "C":
+          secondaryFirstStageElectricHeat();
+          break;
+      
+        case "G":
+        case "K":
+        case "N":
+          secondarySecondStageElectricHeat();
+          break;
+
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
       }
       break;
 
     case "120":
-      if (digitTen === "B" && digitEleven === "H") {
-        document.getElementById("heating-capacity").innerHTML = "240 MBH High Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "240 MBH High Heat";
-      } 
+      switch (digitEleven) {
+        case "G":
+          secondaryFirstStageElectricHeat();
+          break;
+      
+        case "K":
+        case "N":
+        case "P":
+          secondarySecondStageElectricHeat();
+          break;
+
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
       break;
 
     case "150":
-      if (digitTen === "B" && digitEleven === "L") {
-        document.getElementById("heating-capacity").innerHTML = "150 MBH Low Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "150 MBH Low Heat";
-      } else if (digitTen === "B" && digitEleven === "H") {
-        document.getElementById("heating-capacity").innerHTML = "250 MBH High Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "250 MBH High Heat";
+    case "180":
+      switch (digitEleven) {
+        case "G":
+          secondaryFirstStageElectricHeat();
+          break;
+      
+        case "N":
+        case "P":
+          secondarySecondStageElectricHeat();
+          break;
+
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
+      break;
+      
+    case "210":
+    case "240":
+    case "300":
+      switch (digitEleven) { 
+        case "N":
+        case "P":
+        case "R":
+          secondarySecondStageElectricHeat();
+          break;
+
+        default:
+          verfiySecondaryHeatingSelection();
+          break;
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
+// Primary Electric Heat for 6-25 Ton (TSJ and THJ)
+// TSJ150A4S0P00C1A0000000C40000000000000B0
+// TSJ150A4S0000C1A0000000C40000000000000B0
+function electricHeatForTSJAndTHJ(digitFour, digitFive, digitSix, digitEleven) {
+
+  switch (digitFour + digitFive + digitSix) {
+    case "072":
+    case "090":
+    case "102":
+      switch (digitEleven) {
+        case "C":
+        case "G":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "K":
+        case "N":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+
+    case "120":
+    case "150":
+      switch (digitEleven) {
+        case "G":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "K":
+        case "N":
+        case "P":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
       }
       break;
 
     case "180":
+      switch (digitEleven) {
+        case "G":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "N":
+        case "P":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+      
     case "210":
     case "240":
     case "300":
-      if (digitTen === "B" && digitEleven === "L") {
-        document.getElementById("heating-capacity").innerHTML = "250 MBH Low Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "250 MBH Low Heat";
-      } else if (digitTen === "B" && digitEleven === "H") {
-        document.getElementById("heating-capacity").innerHTML = "400 MBH High Heat";
-        document.getElementById("s-heating-capacity").innerHTML = "400 MBH High Heat";
-      }
-      break;
-  }
-}
+      switch (digitEleven) { 
+        case "N":
+        case "P":
+        case "R":
+          twoStageElecticHeatSecondary();
+          break;
 
-// Gas Heat for YSJ & YHJ
-// YSJ150A4S0L00C4A0000000C40000000000000B0 - Gas Heat R410  |  YSK150A4S0L00C4A0000000C40000000000000B0 - Gas Heat R454
-function gasHeat(digitTen, digitOne, digitThree, digitFour, digitFive, digitSix, digitEleven) {
-  if (digitOne === "Y" && digitThree === "J" || digitThree === "K") {
-    if (digitTen === "0" || digitTen === "A") {
-      primaryHeatingType.style.display == "";
-      primaryHeatingStages.style.display = "";
-      primaryHeatingCapacity.style.display = "none";
-      secondaryHeatingCapacity.style.display = "none";
-      secondaryHeatingSource.style.display = "none";
-      secondaryHeatingType.style.display = "none";
-      secondaryHeatingStages.style.display = "none";
-      heatPumpType.style.display = "none";
-      document.getElementById("heating-source").innerHTML = "Gas";
-      document.getElementById("heating-type").innerHTML = "Staged";
-      document.getElementById("heating-stages").innerHTML = "2";
-    }
-  }
-
-  // Modulating Gas Heat 
-  // YSJ210A4SBL00C4A0000000C40000000000000B0 - Low Heat R410  |  YSJ210A4SBH00C4A0000000C40000000000000B0 - High Heat R410
-  // YSK210A4SBL00C4A0000000C40000000000000B0 - Low Heat R454  |  YSK210A4SBH00C4A0000000C40000000000000B0 - High Heat R454
-  if (digitTen === "B") {
-    document.getElementById("heating-source").innerHTML = "Gas";
-    document.getElementById("heating-type").innerHTML = "Modulating";
-    primaryHeatingCapacity.style.display = "";
-    primaryHeatingStages.style.display = "none";
-    secondaryHeatingCapacity.style.display = "none";
-    secondaryHeatingSource.style.display = "none";
-    secondaryHeatingType.style.display = "none";
-    secondaryHeatingStages.style.display = "none";
-    heatPumpType.style.display = "none";
-
-    modGas(digitFour, digitFive, digitSix, digitTen, digitEleven);
-  }
-}
-
-// Electric Heat Selection
-function electricHeatSeletion(digitOne, digitThree, digitTen, digitEleven) {
-  console.log(digitEleven);
-  console.log(digitOne);
-  switch (digitOne + digitThree + digitTen + digitEleven) {
-    case "TJ0B":
-    case "TK0B":
-    case "TJ0C":
-    case "TK0C":
-    case "TJ0E":
-    case "TK0E":
-    case "TJ0G":
-    case "TK0G":
-      document.getElementById("heating-stages").innerHTML = "1";
-      break;
-
-    case "WJ0B":
-    case "WK0B":
-    case "DJ0B":
-    case "DK0B":
-    case "WJ0C":
-    case "WK0C":
-    case "DJ0C":
-    case "DK0C":
-    case "WJ0E":
-    case "WK0E":
-    case "DJ0E":
-    case "DK0E":
-    case "WJ0G":
-    case "WK0G":
-    case "DJ0G":
-    case "DK0G":
-      document.getElementById("s-heating-stages").innerHTML = "1";
-        break;
-
-    case "TJ0J":
-    case "TK0J":
-    case "TJ0K":
-    case "TK0K":
-    case "TJ0N":
-    case "TK0N":
-    case "TJ0P":
-    case "TK0P":
-    case "TJ0R":
-    case "TK0R":
-      document.getElementById("heating-stages").innerHTML = "2";
-      break;
-
-    case "WJ0J":
-    case "WK0J":
-    case "DJ0J":
-    case "DK0J":
-    case "WJ0K":
-    case "WK0K":
-    case "DJ0K":
-    case "DK0K":
-    case "WJ0N":
-    case "WK0N":
-    case "DJ0N":
-    case "DK0N":
-    case "WJ0P":
-    case "WK0P":
-    case "DJ0P":
-    case "DK0P":
-    case "WJ0R":
-    case "WK0R":
-    case "DJ0R":
-    case "DK0R":
-      document.getElementById("s-heating-stages").innerHTML = "2";
-        break;
-  }
-}
-
-// Cooling Only - Electric Heat (TSJ - TSK - THJ - THK)
-function electricHeat(digitOne, digitThree, digitTen, digitEleven) {
-  
-  // No Electic Heat
-  // TSJ150A4S0000C1A0000000C40000000000000B0 - No Electric Heat R410  |  TSK150A4S0000C1A0000000C40000000000000B0 - No Electric Heat R454
-  switch (digitOne + digitThree + digitTen + digitEleven) {
-    case "TJ00":
-    case "TK00":
-      primaryHeatingCapacity.style.display = "none";
-      primaryHeatingType.style.display = "none";
-      primaryHeatingStages.style.display = "none";
-      secondaryHeatingCapacity.style.display = "none";
-      secondaryHeatingSource.style.display = "none";
-      secondaryHeatingType.style.display = "none";
-      secondaryHeatingStages.style.display = "none";
-      heatPumpType.style.display = "none";
-      document.getElementById("heating-source").innerHTML = "* Not Installed";
-      break;
-  }
-
-  // Electric Heat
-  // TSJ150A4S0C00C1A0000000C40000000000000B0 Electric Heat R410  |  TSK150A4S0C00C1A0000000C40000000000000B0 Electric Heat R454
-  if (digitTen === "0" && digitEleven !== "0") {
-    switch (digitOne + digitThree + digitTen) {
-      case "TJ0":
-      case "TK0":
-        electricHeatSeletion(digitOne,  digitThree,  digitTen, digitEleven);
-        document.getElementById("heating-source").innerHTML = "Electric";
-        document.getElementById("heating-type").innerHTML = "Staged";
-        primaryHeatingCapacity.style.display = "none";
-        primaryHeatingType.style.display = "";
-        primaryHeatingStages.style.display = "";
-        secondaryHeatingCapacity.style.display = "none";
-        secondaryHeatingSource.style.display = "none";
-        secondaryHeatingType.style.display = "none";
-        secondaryHeatingStages.style.display = "none";
-        heatPumpType.style.display = "none";
-        break;
-    }
-  }
-}
-
-// Heat Pump
-function heatPumpAndDualFuel(digitOne, digitThree, digitTen, digitEleven) {
-  // WSJ150A4S0000C1A0000000C40000000000000B0 HP Only
-  if (digitOne === "W" || digitOne === "D") {
-    switch (digitOne + digitThree + digitTen + digitEleven) {
-      case "WJ00":
-      case "WK00":
-      case "DJ00":
-      case "DK00":
-        primaryHeatingCapacity.style.display = "none";
-        primaryHeatingType.style.display = "";
-        primaryHeatingStages.style.display = "";
-        secondaryHeatingCapacity.style.display = "none";
-        secondaryHeatingSource.style.display = "";
-        secondaryHeatingType.style.display = "none";
-        secondaryHeatingStages.style.display = "none";
-        heatPumpType.style.display = "";
-        document.getElementById("hp-type").innerHTML = "Air Source";
-        document.getElementById("heating-source").innerHTML = "Heat Pump";
-        document.getElementById("heating-type").innerHTML = "Staged";
-        document.getElementById("heating-stages").innerHTML = "Full";
-        document.getElementById("s-heating-source").innerHTML = "* Not Installed";
-        break;
-    }
-    // Electric Heat 
-    // WSJ150A4S0J00C1A0000000C40000000000000B0 Secondary Electric Heat Installed  |  DSJ150A4S0J00C1A0000000C40000000000000B0 Secondary Electirc Heat Installed
-    if (digitTen === "0" && digitEleven !== "0") {
-      electricHeatSeletion(digitOne,  digitThree,  digitTen, digitEleven);
-      primaryHeatingCapacity.style.display = "none";
-      primaryHeatingType.style.display = "";
-      primaryHeatingStages.style.display = "";
-      secondaryHeatingCapacity.style.display = "none";
-      secondaryHeatingSource.style.display = "";
-      secondaryHeatingType.style.display = "";
-      secondaryHeatingStages.style.display = "";
-      heatPumpType.style.display = "";
-      document.getElementById("hp-type").innerHTML = "Air Source";
-      document.getElementById("heating-source").innerHTML = "Heat Pump";
-      document.getElementById("heating-type").innerHTML = "Staged";
-      document.getElementById("heating-stages").innerHTML = "Full";
-      document.getElementById("s-heating-source").innerHTML = "Electric";
-      document.getElementById("s-heating-type").innerHTML = "Staged";
-    }
-
-    // Dual Fuel Satged Gas
-    // DSJ072A4S0L00C1A0000000C40000000000000B0 Secondary Staged Gas Heat  
-    if (digitTen === "0" || digitTen === "A" && digitEleven === "L" || digitEleven === "M" || digitEleven === "H") {
-      switch (digitOne + digitThree + digitTen + digitEleven) {
-        case "DJ0L":
-        case "DK0L":
-        case "DJ0M":
-        case "DK0M": 
-        case "DJ0H":
-        case "DK0H": 
-        case "DJAL":
-        case "DKAL":
-        case "DJAM":
-        case "DKAM": 
-        case "DJAH":
-        case "DKAH": 
-          primaryHeatingType.style.display == "";
-          primaryHeatingStages.style.display = "";
-          primaryHeatingCapacity.style.display = "none";
-          secondaryHeatingCapacity.style.display = "none";
-          secondaryHeatingType.style.display = "";
-          secondaryHeatingStages.style.display = "";
-          heatPumpType.style.display = "";
-          document.getElementById("hp-type").innerHTML = "Air Source";
-          document.getElementById("heating-source").innerHTML = "Heat Pump";
-          document.getElementById("heating-type").innerHTML = "Staged";
-          document.getElementById("heating-stages").innerHTML = "Full";
-          document.getElementById("s-heating-source").innerHTML = "Gas";
-          document.getElementById("s-heating-type").innerHTML = "Staged";
-          document.getElementById("s-heating-stages").innerHTML = "2"; 
+        default:
+          verifyElectricHeatDigitEleven();
           break;
       }
-    }
+      break;
 
-    // Dual Fuel Modulating Gas Heat
-    // DSJ072A4SBH00C1A0000000C40000000000000B0 Modulating Gas High Heat  |  DSJ072A4SBL00C1A0000000C40000000000000B0 Modulating Gas Low Heat
-    if (digitOne === "D" && digitTen === "B") {
-      document.getElementById("hp-type").innerHTML = "Air Source";
-      document.getElementById("heating-source").innerHTML = "Heat Pump";
-      document.getElementById("heating-type").innerHTML = "Staged";
-      document.getElementById("heating-stages").innerHTML = "Full";
-      document.getElementById("s-heating-source").innerHTML = "Gas";
-      document.getElementById("s-heating-type").innerHTML = "Modulating";
-      primaryHeatingCapacity.style.display = "none";
-      heatPumpType.style.display = "";
-      primaryHeatingStages.style.display = "";
-      secondaryHeatingCapacity.style.display = "";
-      secondaryHeatingSource.style.display = "";
-      secondaryHeatingType.style.display = "";
-      secondaryHeatingStages.style.display = "none";
+    default:
 
-      modGas(digitFour, digitFive, digitSix, digitTen, digitEleven);
-    }
+      break;
   }
 }
 
-// Fresh Air - Economizer
+// Primary Electric Heat for 6-25 Ton (TSK and THK)
+// TSK150A4S0P00C1A0000000C40000000000000B0
+// TSK150A4S0000C1A0000000C40000000000000B0
+function electricHeatForTSKAndTHKAndTZK(digitFour, digitFive, digitSix, digitEleven) {
+  switch (digitFour + digitFive + digitSix) {
+    case "036":
+    case "048":
+      switch (digitEleven) {
+        case "B":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "E":
+        case "G":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+  
+    case "060":
+      switch (digitEleven) {
+        case "B":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "E":
+        case "G":
+        case "J":
+        case "K":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+
+    case "072":
+    case "090":
+    case "102":
+      switch (digitEleven) {
+        case "C":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "G":
+        case "K":
+        case "N":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+
+    case "120":
+      switch (digitEleven) {
+        case "G":
+          if (digitOne === "T" && digitTwo === "S" && digitThree === "K" || digitOne === "T" && digitTwo === "J" && digitThree === "K") {
+            twoStageElecticHeatSecondary();
+          } else {
+            oneStageElectricHeatPrimary();
+          }
+
+        case "K":
+        case "N":
+        case "P":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+
+    case "150":
+    case "180":
+      switch (digitEleven) {
+        case "G":
+          oneStageElectricHeatPrimary();
+          break;
+      
+        case "K":
+          if (digitOne === "T" && digitTwo === "S" && digitThree === "K" || digitOne === "T" && digitTwo === "J" && digitThree === "K") {
+            twoStageElecticHeatSecondary();
+          } else {
+            verifyElectricHeatDigitEleven();
+          }
+
+        case "N":
+        case "P":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+      
+    case "210":
+    case "240":
+    case "300":
+      switch (digitEleven) { 
+        case "N":
+        case "P":
+        case "R":
+          twoStageElecticHeatSecondary();
+          break;
+
+        default:
+          verifyElectricHeatDigitEleven();
+          break;
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
+function coolingWithElectricBackup(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven) {
+  switch (digitOne + digitTwo + digitThree) {
+    // Heat Pump WSJ and WHJ 12.5-25 Ton and Secondary Electric Heat
+    // TSJ240A4S0000C1A0000000C40000000000000B0
+    case "TSJ":
+    case "THJ":
+      switch (digitFour + digitFive + digitSix) {
+        case "072":
+        case "090":
+        case "102":
+        case "120":
+        case "150":
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+          coolingOnlyConfig();
+          switch (digitTen) {
+            case "0":
+              if (digitEleven !== "0") {
+                electricHeatForTSJAndTHJ(digitFour, digitFive, digitSix, digitEleven);
+              }
+              break;
+          
+            default:
+              verfiySecondaryHeatingSelection();
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+    break;
+
+    // TSK240A4S0000C1A0000000C40000000000000B0
+    // TZK240A4S0000C1A0000000C40000000000000B0
+    case "TSK":
+    case "THK":
+    case "TZK":
+      switch (digitFour + digitFive + digitSix) {
+        case "036":
+        case "048":
+        case "060":
+        case "072":
+        case "090":
+        case "102":
+        case "120":
+        case "150":
+        case "180":
+        case "210":
+        case "240":
+        case "300":
+          coolingOnlyConfig();
+          switch (digitTen) {
+            case "0":
+              if (digitEleven !== "0") {
+                electricHeatForTSKAndTHKAndTZK(digitFour, digitFive, digitSix, digitEleven);
+              }
+              break;
+          
+            default:
+              verfiySecondaryHeatingSelection();
+              break;
+          }
+          break;
+      
+        default:
+          verifyTonnage();
+          break;
+      }
+    break;
+
+    default:
+      break;
+    }
+}
+
+function heatSelection(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven) {
+  heatPumpAndDualFuelSelection(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven);
+  stagedOrModGasHeatSelection(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven);
+  coolingWithElectricBackup(digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitTen, digitEleven);
+}
+
+// **********  Economizer Selection **********
 // TSJ072A4S000002A0000000C40000000000000B0 Outside Air Not Installed  -  TSJ072A4S0B00C2A0000000C40000000000000B0 Outside Air Installed
 function OutsideAir(digitFourteen) {
   
@@ -556,7 +1504,7 @@ function OutsideAir(digitFourteen) {
       document.getElementById("outside-air").innerHTML = "0 to 100% Economizer";
       document.getElementById("econ-type").innerHTML = "Dry Bulb";
       document.getElementById("remote-position").innerHTML = "Not Installed";
-      document.getElementById("space-pressure").innerHTML = "Installed";
+      document.getElementById("space-pressure").innerHTML = "* Not Installed";
     break;
 
     case "D":
@@ -570,21 +1518,21 @@ function OutsideAir(digitFourteen) {
       document.getElementById("outside-air").innerHTML = "0 to 100% Economizer";
       document.getElementById("econ-type").innerHTML = "Reference Enthalpy";
       document.getElementById("remote-position").innerHTML = "Not Installed";
-      document.getElementById("space-pressure").innerHTML = "Installed";
+      document.getElementById("space-pressure").innerHTML = "* Not Installed";
       break;
 
     case "F":
       document.getElementById("outside-air").innerHTML = "0 to 100% Economizer";
       document.getElementById("econ-type").innerHTML = "Reference Enthalpy";
       document.getElementById("remote-position").innerHTML = "Not Installed";
-      document.getElementById("space-pressure").innerHTML = " * Not Installed";
+      document.getElementById("space-pressure").innerHTML = "* Not Installed";
       break;
 
     case "G":
       document.getElementById("outside-air").innerHTML = "0 to 100% Economizer";
       document.getElementById("econ-type").innerHTML = "Comparative Enthalpy";
       document.getElementById("remote-position").innerHTML = "Not Installed";
-      document.getElementById("space-pressure").innerHTML = "Installed";
+      document.getElementById("space-pressure").innerHTML = "* Not Installed";
       break;
 
     case "H":
@@ -623,12 +1571,21 @@ function OutsideAir(digitFourteen) {
       document.getElementById("remote-position").innerHTML = "Not Installed";
       document.getElementById("space-pressure").innerHTML = " * Not Installed";
       break;
+
+    default:
+      document.getElementById("outside-air").innerHTML = "Verify Digit Fourteen";
+      document.getElementById("econ-type").innerHTML = "Verify Digit Fourteen";
+      document.getElementById("remote-position").innerHTML = "Verify Digit Fourteen";
+      document.getElementById("space-pressure").innerHTML = "Verify Digit Fourteen";
+      break;
   }
 }
 
-// Supply Fan Motor
+// **********  Supply Fan Motor Selection **********
 // YSK102A4S0L00C4A0000000C0000000000000000 VVDA  |  YSK102A4S0L00C2A0000000C0000000000000000 VVZT  |  YSK102A4S0L00C1A0000000C0000000000000000 CVZT
-function indoorFanType(digitFifteen, digitFour, digitFive, digitSix, digitEight, digitTen, digitTwelve, digitThirteen, digitTwentyTwo, digitThirtynine) {
+function indoorFanType(digitFifteen,digitOne, digitTwo, digitThree, digitFour, digitFive, digitSix, digitEight, digitTen, digitTwelve, digitThirteen, digitTwentyTwo, digitThirtynine) {
+ 
+let indoorFanVFD = document.getElementById("indoor-vfd");
 
  switch (digitFifteen) {
     case "0":
@@ -636,6 +1593,7 @@ function indoorFanType(digitFifteen, digitFour, digitFive, digitSix, digitEight,
       document.getElementById("system-type").innerHTML = "CVZT";
       document.getElementById("fan-type").innerHTML = "Multi Speed";
       document.getElementById("indoor-fan-vfd").innerHTML = "Ebm Papst";
+      indoorFanVFD.style.display = "";
       break;
 
     case "2":
@@ -643,6 +1601,8 @@ function indoorFanType(digitFifteen, digitFour, digitFive, digitSix, digitEight,
       document.getElementById("system-type").innerHTML = "VVZT";
       document.getElementById("fan-type").innerHTML = "Variable Speed";
       document.getElementById("indoor-fan-vfd").innerHTML = "Ebm Papst";
+      indoorFanVFD.style.display = "";
+      
       break;
 
     case "4":
@@ -650,7 +1610,15 @@ function indoorFanType(digitFifteen, digitFour, digitFive, digitSix, digitEight,
       document.getElementById("system-type").innerHTML = "VVDA"
       document.getElementById("fan-type").innerHTML = "Variable Speed";
       document.getElementById("indoor-fan-vfd").innerHTML = "Ebm Papst";
+      indoorFanVFD.style.display = "";
       break;
+    
+    default:
+      document.getElementById("system-type").innerHTML = "Verify Digit Fifteen"
+      document.getElementById("fan-type").innerHTML = "Verify Digit Fifteen";
+      document.getElementById("indoor-fan-vfd").innerHTML = "Verify Digit Fifteen";
+      indoorFanVFD.style.display = "";
+      break
   }
 
 // Supply Fan VFD Mitsubishi Drive - // YSJ072A4S0C04C2A0000000C40000000000000B0 VFD
@@ -683,29 +1651,64 @@ if (digitTwelve === "0" && digitThirteen === "9") {
   }
 }
 
-// Non EBM or VFD Supply Fan
-if (digitFour === "0" && digitFive === "3" && digitSix === "6" || digitFour === "0" && digitFive === "4" && digitSix === "8" || digitFour === "0" && digitFive === "6" && digitSix === "0") {
-  document.getElementById("indoor-fan-vfd").innerHTML = "---";
-}
+  // Non EBM or VFD Supply Fan
+  // 3-5 Ton Supply Fan Selection
+  function singleSpeedSelection() {
+    document.getElementById("fan-type").innerHTML = "Single Speed";
+    indoorFanVFD.style.display = "none";
+  }
+
+  function multiSpeedSelection(params) {
+    document.getElementById("fan-type").innerHTML = "Multi Speed";
+    indoorFanVFD.style.display = "none";
+  }
+  
+  switch (digitOne + digitTwo + digitThree) {
+    case "WSK":
+    case "DSK":
+    case "YSK":
+    case "TSK":
+      switch (digitFour + digitFive + digitSix) {
+        case "036":
+        case "048":
+        case "060":
+          singleSpeedSelection();
+          break;
+      
+        default:
+          break;
+      }
+      break;
+  
+    case "YHK":
+    case "THK":
+      switch (digitFour + digitFive + digitSix) {
+        case "036":
+          multiSpeedSelection();
+          break;
+      
+        default:
+          break;
+      }
+    default:
+      break;
+  }
 }
 
-
-// Space Controller
+// **********  Space Controller Selection **********
 function spaceController(digitTwentyOne, digitFifteen) {
   if (digitTwentyOne === "0" && digitFifteen === "4" || digitFifteen === "5") {
     document.getElementById("space-controller").innerHTML = "Single Setpoint Zone Sensor";
-  }
-
-  if (digitTwentyOne === "0" && digitFifteen === "0" || digitFifteen === "1" || digitFifteen === "2" || digitFifteen === "3") {
+  } else if (digitTwentyOne === "0" && digitFifteen === "0" || digitFifteen === "1" || digitFifteen === "2" || digitFifteen === "3") {
     document.getElementById("space-controller").innerHTML = "Conventional Thermostat";
-  }
-
-  if (digitTwentyOne === "1") {
+  } else if (digitTwentyOne === "1") {
     document.getElementById("space-controller").innerHTML = "Single Setpoint Zone Sensor";
+  } else {
+    document.getElementById("space-controller").innerHTML = "Verify Digit Twenty-One";
   }
 }
 
-// Refrigerantion System Option - (Reheat/Dehum)
+// **********  Refrigerantion System Option - (Reheat/Dehum) Selection  **********
 // YSJ210A4S0L00C4A0000000C4000000000000000 Modulating Reheat Not Installed R410  |  YSJ210A4S0L00C4A00000A0C4000000000000000 Modulating Reheat R410
 function hotGasReheatDehum(digitTwentyTwo) {
 
@@ -729,10 +1732,17 @@ function hotGasReheatDehum(digitTwentyTwo) {
       document.getElementById("humidistat").innerHTML = "Not Install";
       document.getElementById("humidity-sensor").innerHTML = "Installed";
       break;
+
+    default:
+      document.getElementById("reheat").innerHTML = "Verify Digit Twenty-Two";
+      document.getElementById("dehum-control").innerHTML = "Verify Digit Twenty-Two";
+      document.getElementById("humidistat").innerHTML = "Verify Digit Twenty-Two";
+      document.getElementById("humidity-sensor").innerHTML = "Verify Digit Twenty-Two";
+      break;
   }
 }
 
-// Supply & Return Smoke Detector
+// **********  Supply & Return Smoke Detector Selection **********
 // YSK102A4S0L00C4A0000000C4000000000000000 Smoke Detector Installed  |  YSK102A4S0L00C4A000000004000000000000000 Smoke Detector Not Installed
 function supplyAndReturnSmokeDetector(digitTwentyFour) {
   switch (digitTwentyFour) {
@@ -755,10 +1765,15 @@ function supplyAndReturnSmokeDetector(digitTwentyFour) {
       document.getElementById("supply-smoke").innerHTML = "Installed";
       document.getElementById("return-smoke").innerHTML = "Installed";
       break;
+
+    default:
+      document.getElementById("supply-smoke").innerHTML = "Verify Digit Twenty-Four";
+      document.getElementById("return-smoke").innerHTML = "Verify Digit Twenty-Four";
+      break;
   }
 }
 
-// System Monitoring Controls
+// **********  System Monitoring Controls Selection **********
 // YSK102A4S0L00C4A0000000C7000000000000000 Clogged Filter & Condensate Flow Switch Installed  |  YSK102A4S0L00C4A0000000C0000000000000000 Not Installed
 function systemMonitorControls(digitTwentyFive) {
 
@@ -802,10 +1817,15 @@ function systemMonitorControls(digitTwentyFive) {
         document.getElementById("clogged-filter").innerHTML = "Installed";
         document.getElementById("overflow-switch").innerHTML = "Installed";
         break;
+
+    default:
+      document.getElementById("clogged-filter").innerHTML = "Verify Digit Twenty-Five";
+      document.getElementById("overflow-switch").innerHTML = "Verify Digit Twenty-Five";
+      break;
   }
 }
 
-// Low Ambient Cooling
+// **********  Low Ambient Cooling Selection  **********
 function lowAmbient(digitTwentynine) {
   switch (digitTwentynine) {
     case "0":
@@ -815,9 +1835,12 @@ function lowAmbient(digitTwentynine) {
     case "A":
       document.getElementById("low-ambient").innerHTML = "Installed";
       break;
+
+    default:
+      document.getElementById("low-ambient").innerHTML = "Verify Digit Twenty-Nine";
+      break;
   }
 }
-
 
 // DAT Sensor
 function DATSensor(digitTen, digitFourteen, digitFifteen, digitTwentyTwo, digitTwentyFive) {
@@ -831,17 +1854,22 @@ function DATSensor(digitTen, digitFourteen, digitFifteen, digitTwentyTwo, digitT
   }
 }
 
-// Note for when Economizer or Electric Heat could be field-installed
-function notInstalledNote(digitEleven, digitFourteen) {
+// Note
+function notInstalledNote(digitOne) {
   
   let note = document.getElementById("note");
-  if (digitEleven === "0") {
-    note.style.display = "";
-  } else if (digitFourteen === "0") {
-    note.style.display = "";
-  } else {
-    note.style.display = "none";
+  switch (digitOne) {
+    case "W":
+    case "Y":
+    case "T":
+    case "D":
+      note.style.display = "";
+      break;
+
+    default:
+      break;
   }
+
 }  
 
 // Reset Value
@@ -852,6 +1880,6 @@ function resetInputValue(modelInput) {
   modelNumTable.style.display = 'none';
   lengthMessage.style.display = 'none';
   digitMessage.style.display = 'none';
-  notInstalledNote()
+  document.getElementById("note").style.display = 'none';
   return value;
 }
