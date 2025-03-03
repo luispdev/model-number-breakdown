@@ -1622,34 +1622,43 @@ let indoorFanVFD = document.getElementById("indoor-vfd");
   }
 
 // Supply Fan VFD Mitsubishi Drive - // YSJ072A4S0C04C2A0000000C40000000000000B0 VFD
-if (digitThirtynine === "B" || digitThirtynine === "C") {
-  if (digitTwelve === "0" && digitThirteen === "4" || digitThirteen === "5" || digitThirteen === "6") {
-    if (digitEight ===  "3" || digitEight === "4" && digitEight !== "W" && digitTen !== "B" && digitTwentyTwo !== "A") {
-      if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
-        document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+switch (digitOne + digitTwo + digitThree) {
+  case "YSJ":
+  case "YHJ":
+    if (digitThirtynine === "B" || digitThirtynine === "C") {
+      if (digitTwelve === "0" && digitThirteen === "4" || digitThirteen === "5" || digitThirteen === "6") {
+        if (digitEight ===  "3" || digitEight === "4" && digitEight !== "W" && digitTen !== "B" && digitTwentyTwo !== "A") {
+          if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
+            document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+          }
+        }
+      }
+      
+    }
+    
+    if (digitFour === "1" && digitFive === "0" && digitSix === "2") {
+      if (digitEight === "3" && digitEight !== "4" && digitEight !== "W") {
+        if (digitTen !== "B" && digitTwentyTwo !== "A" ) {
+          if (digitTwelve === "0" && digitThirteen === "4" || digitThirteen === "5" || digitThirteen === "6" ) {
+            document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+          }
+        }
       }
     }
-  }
-  
-}
-
-if (digitFour === "1" && digitFive === "0" && digitSix === "2") {
-  if (digitEight === "3" && digitEight !== "4" && digitEight !== "W") {
-    if (digitTen !== "B" && digitTwentyTwo !== "A" ) {
-      if (digitTwelve === "0" && digitThirteen === "4" || digitThirteen === "5" || digitThirteen === "6" ) {
-        document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+    
+    if (digitTwelve === "0" && digitThirteen === "9") {
+      if (digitThirtynine === "B"  && digitEight !== "3" && digitEight === "4" && digitEight !== "W" && digitTen !== "B" && digitTwentyTwo !== "A") {
+        if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "0" && digitSix === "2" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
+          document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+        }
       }
     }
-  }
-}
+    break;
 
-if (digitTwelve === "0" && digitThirteen === "9") {
-  if (digitThirtynine === "B"  && digitEight !== "3" && digitEight === "4" && digitEight !== "W" && digitTen !== "B" && digitTwentyTwo !== "A") {
-    if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "0" && digitSix === "2" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
-      document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
-    }
-  }
-}
+  default:
+    break;
+};
+
 
   // Non EBM or VFD Supply Fan
   // 3-5 Ton Supply Fan Selection

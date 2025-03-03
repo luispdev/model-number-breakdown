@@ -18,6 +18,7 @@
     <div class="alert alert-danger" role="alert" id="digit-message" style="display: none;">
       Use letters and numbers only!
     </div>
+    
     <!-- user input and submit button -->
     <div class="row d-flex justify-content-center">
       <div class="card w-75 p-3">
@@ -28,7 +29,8 @@
           <h5 class="card-title">Enter your model number to retrieve the configurations</h5>
           <input type="text" id="modelNumberInput" class="d-inline-flex p-1 bd-highlight w-100"
             placeholder="Enter the model number" minlength="40" maxlength="40">
-          <div>
+        </div>
+        <div>
             <button type="button" onclick="submitInput()" class="btn btn-primary mt-2"
               id="config-button">Configure</button>
             <button type="button" onclick="const value = resetInputValue('modelNumberInput')"
