@@ -33,14 +33,14 @@ function submitInput() {
     refrigerant(modelNumberSplit[2]);
     tonnage(modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5]);
     voltage(modelNumberSplit[7]);
-    OutsideAir(modelNumberSplit[13], modelNumberSplit[9], modelNumberSplit[10])
+    outsideAir(modelNumberSplit[13], modelNumberSplit[9], modelNumberSplit[10])
     indoorFanType(modelNumberSplit[14], modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5], modelNumberSplit[7], modelNumberSplit[9], modelNumberSplit[11], modelNumberSplit[12], modelNumberSplit[21], modelNumberSplit[38]);
     spaceController(modelNumberSplit[20], modelNumberSplit[14]);
     hotGasReheatDehum(modelNumberSplit[21]);
     supplyAndReturnSmokeDetector(modelNumberSplit[23]);
     systemMonitorControls(modelNumberSplit[24]);
     lowAmbient(modelNumberSplit[28]);
-    DATSensor(modelNumberSplit[9], modelNumberSplit[13], modelNumberSplit[14], modelNumberSplit[21], modelNumberSplit[24]);
+    datSensor(modelNumberSplit[9], modelNumberSplit[13], modelNumberSplit[14], modelNumberSplit[21], modelNumberSplit[24]);
     notInstalledNote(modelNumberSplit[0]);
     heatSelection(modelNumberSplit[0], modelNumberSplit[1], modelNumberSplit[2], modelNumberSplit[3], modelNumberSplit[4], modelNumberSplit[5],modelNumberSplit[9], modelNumberSplit[10]);
     
@@ -1472,7 +1472,7 @@ function heatSelection(digitOne, digitTwo, digitThree, digitFour, digitFive, dig
 
 // **********  Economizer Selection **********
 // TSJ072A4S000002A0000000C40000000000000B0 Outside Air Not Installed  -  TSJ072A4S0B00C2A0000000C40000000000000B0 Outside Air Installed
-function OutsideAir(digitFourteen) {
+function outsideAir(digitFourteen) {
   
   let economizerType = document.getElementById("economizer");
   let remoteMinPosition = document.getElementById("remote-min-position");
@@ -1697,14 +1697,23 @@ if (digitTwelve === "0" && digitThirteen === "9") {
 
 // **********  Space Controller Selection **********
 function spaceController(digitTwentyOne, digitFifteen) {
-  if (digitTwentyOne === "0" && digitFifteen === "4" || digitFifteen === "5") {
-    document.getElementById("space-controller").innerHTML = "Single Setpoint Zone Sensor";
-  } else if (digitTwentyOne === "0" && digitFifteen === "0" || digitFifteen === "1" || digitFifteen === "2" || digitFifteen === "3") {
-    document.getElementById("space-controller").innerHTML = "Conventional Thermostat";
-  } else if (digitTwentyOne === "1") {
-    document.getElementById("space-controller").innerHTML = "Single Setpoint Zone Sensor";
-  } else {
-    document.getElementById("space-controller").innerHTML = "Verify Digit Twenty-One";
+  switch (digitTwentyOne) {
+    case "0":
+      if (digitTwentyOne === "0" && digitFifteen === "4" || digitFifteen === "5") {
+        document.getElementById("space-controller").innerHTML = "Single Setpoint Zone Sensor";
+      } else {
+        document.getElementById("space-controller").innerHTML = "Conventional Thermostat";
+      }
+      break;
+
+    case "1":
+    case "2":
+    case "3":
+      document.getElementById("space-controller").innerHTML = "Single Setpoint Zone Sensor";
+      break;
+  
+    default:
+      break;
   }
 }
 
@@ -1843,7 +1852,7 @@ function lowAmbient(digitTwentynine) {
 }
 
 // DAT Sensor
-function DATSensor(digitTen, digitFourteen, digitFifteen, digitTwentyTwo, digitTwentyFive) {
+function datSensor(digitTen, digitFourteen, digitFifteen, digitTwentyTwo, digitTwentyFive) {
   if (digitTen === "B" || digitFourteen === "C" || digitFourteen === "D" || digitFourteen === "E" || digitFourteen === "F"|| 
       digitFourteen === "G" || digitFourteen === "H" || digitFourteen === "K" || digitFourteen === "M" || digitFourteen === "P" || 
       digitFourteen === "R" || digitFifteen === "2" || digitFifteen === "3" || digitFifteen === "4" || digitFifteen === "5" || 
