@@ -1625,16 +1625,59 @@ let indoorFanVFD = document.getElementById("indoor-vfd");
 switch (digitOne + digitTwo + digitThree) {
   case "YSJ":
   case "YHJ":
-    if (digitThirtynine === "B" || digitThirtynine === "C") {
-      if (digitTwelve === "0" && digitThirteen === "4" || digitThirteen === "5" || digitThirteen === "6") {
-        if (digitEight ===  "3" || digitEight === "4" && digitEight !== "W" && digitTen !== "B" && digitTwentyTwo !== "A") {
-          if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
-            document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+    switch (digitThirtynine) {
+      case "B":
+      case "C":
+          switch (digitTwelve + digitThirteen) {
+            case "04":
+            case "05":
+                switch (digitEight) {
+                  case "3":
+                  case "4":
+                    if (digitTen !== "B" && digitTwentyTwo !== "A") {
+                      if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
+                        document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+                      }
+                    }
+                    break;
+                
+                  default:
+                    break;
+                }
+              break;
+
+            case "06":
+              switch (digitEight) {
+                case "3":
+                  if (digitTen !== "B" && digitTwentyTwo !== "A") {
+                    if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
+                      document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+                    }
+                  }
+                  break;
+              
+                default:
+                  break;
+              }
+              break;
+          
+            default:
+              break;
           }
-        }
-      }
-      
+        break;
+    
+      default:
+        break;
     }
+    // if (digitThirtynine === "B" || digitThirtynine === "C") {
+    //   if (digitTwelve === "0" && digitThirteen === "4" || digitThirteen === "5" || digitThirteen === "6") {
+    //     if (digitEight ===  "3" || digitEight === "4" && digitEight !== "W" && digitTen !== "B" && digitTwentyTwo !== "A") {
+    //       if (digitFour === "0" && digitFive === "7" && digitSix === "2" || digitFour === "0" && digitFive === "9" && digitSix === "0" || digitFour === "1" && digitFive === "2" && digitSix === "0") {
+    //         document.getElementById("indoor-fan-vfd").innerHTML = "Mitsubishi";
+    //       }
+    //     }
+    //   }
+    // }
     
     if (digitFour === "1" && digitFive === "0" && digitSix === "2") {
       if (digitEight === "3" && digitEight !== "4" && digitEight !== "W") {
