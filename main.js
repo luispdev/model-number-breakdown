@@ -1476,7 +1476,7 @@ function outsideAir(digitFourteen) {
   
   let economizerType = document.getElementById("economizer");
   let remoteMinPosition = document.getElementById("remote-min-position");
-  if (digitFourteen === "0" || digitFourteen === "B") {
+  if (digitFourteen === "0" || digitFourteen === "A" || digitFourteen === "B") {
     economizerType.style.display = "none";
     remoteMinPosition.style.display = "none";
   } else {
@@ -1487,6 +1487,7 @@ function outsideAir(digitFourteen) {
   switch (digitFourteen) {
 
     case "0":
+    case "A":
       document.getElementById("outside-air").innerHTML = "* Not Installed";
       document.getElementById("econ-type").innerHTML = "---";
       document.getElementById("remote-position").innerHTML = "---";
