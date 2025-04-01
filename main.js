@@ -1936,3 +1936,10 @@ function resetInputValue(modelInput) {
   document.getElementById("note").style.display = 'none';
   return value;
 }
+
+
+// Report a problem button 
+const reportBtn = document.getElementById("report-problem-btn")
+reportBtn.addEventListener('click', function() {
+  window.open("https://support.trane.com/hc/en-us/requests/new", "supportTab");
+})
